@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.78/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.78/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+  <div id="coords" ></div>
+  <div id="cesiumContainer" style="width: auto; height:auto"></div>
+  <script>
+    Cesium.Ion.defaultAccessToken = 'yourAccessToken';
+
+    var viewer = new Cesium.Viewer("cesiumContainer", {
+      terrainProvider: new Cesium.CesiumTerrainProvider({
+        url: Cesium.IonResource.fromAssetId(464239),
+      }),
+    });
+
+
+    viewer.scene.globe.enableLighting = true;
+    
+    
+    
+    viewer.scene.canvas.addEventListener('mousemove', function(e) {
+
+    var ellipsoid = viewer.scene.globe.ellipsoid;
+    // Mouse over the globe to see the cartographic position 
+    var cartesian = viewer.camera.pickEllipsoid(new Cesium.Cartesian3(e.clientX, e.clientY), ellipsoid);
+    if (cartesian) {
+        var cartographic = ellipsoid.cartesianToCartographic(cartesian);
+        var longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(10);
+        var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(10);
+
+        var result = 'coordinates: (' + longitudeString + ', ' + latitudeString + ')';
+
+        document.getElementById("coords").innerHTML = result;
+    } 
+    });
+  </script>
+</body>
+</html>
+
+

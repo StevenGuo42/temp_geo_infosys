@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.78/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.78/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+    <div id="demo" ></div>
+
+    <div id="cesiumContainer" style="width: auto; height:auto"></div>
+    <script>
+        // use your access token here
+        Cesium.Ion.defaultAccessToken = 'yourAccessToken';
+        
+        var a = { red: 1, green: 1, blue: 1, alpha: 0.5 }
+        
+        //globe with terrain
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider : Cesium.createWorldTerrain({
+                requestVertexNormals: true
+            }),
+            mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84)
+        });
+        viewer.scene.globe.enableLighting = true;
+        
+        //make img material
+        var rect_img = new Cesium.ImageMaterialProperty({
+                    image: '../maps/HellenisticCityFoundations2.jpg',
+                    color: a,
+                    transparent: true
+                });
+                
+        //add img rectangle to globe
+        var entity = viewer.entities.add
+        ({
+            rectangle: 
+            {                                               //W, S, E, N
+                coordinates: Cesium.Rectangle.fromDegrees(18.35, 20.9, 76.2, 49.5),
+                material: rect_img,
+            }
+        });
+        
+        //move camera
+        viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(47, 35, 5000000.0),
+        });
+        
+    </script>
+</body>
+</html>
